@@ -10,9 +10,7 @@ import com.example.eventsourcing.domain.event.EventWithId;
 import com.example.eventsourcing.repository.AggregateRepository;
 import com.example.eventsourcing.repository.EventRepository;
 import jakarta.annotation.Nullable;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +21,18 @@ import java.util.UUID;
 
 @Transactional
 @Component
-@RequiredArgsConstructor
-@Slf4j
 public class AggregateStore {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(AggregateStore.class);
     private final AggregateRepository aggregateRepository;
     private final EventRepository eventRepository;
     private final EventSourcingProperties properties;
+
+    public AggregateStore(AggregateRepository aggregateRepository, EventRepository eventRepository, EventSourcingProperties properties) {
+        this.aggregateRepository = aggregateRepository;
+        this.eventRepository = eventRepository;
+        this.properties = properties;
+    }
 
     public List<EventWithId<Event>> saveAggregate(Aggregate aggregate) {
         log.debug("Saving aggregate {}", aggregate);
@@ -75,8 +78,8 @@ public class AggregateStore {
         return readAggregate(aggregateType, aggregateId, null);
     }
 
-    public Aggregate readAggregate(@NonNull AggregateType aggregateType,
-                                   @NonNull UUID aggregateId,
+    public Aggregate readAggregate(AggregateType aggregateType,
+                                   UUID aggregateId,
                                    @Nullable Integer version) {
         log.debug("Reading {} aggregate {}", aggregateType, aggregateId);
         SnapshottingProperties snapshotting = properties.getSnapshotting(aggregateType);

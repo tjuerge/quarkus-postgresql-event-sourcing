@@ -3,10 +3,9 @@ package com.example.eventsourcing.service;
 import com.example.eventsourcing.service.event.AsyncEventHandler;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.postgresql.PGNotification;
 import org.postgresql.jdbc.PgConnection;
+import org.slf4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
@@ -16,14 +15,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @ConditionalOnProperty(name = "event-sourcing.subscriptions", havingValue = "postgres-channel")
-@RequiredArgsConstructor
-@Slf4j
 public class PostgresChannelEventSubscriptionProcessor {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(PostgresChannelEventSubscriptionProcessor.class);
     private final List<AsyncEventHandler> eventHandlers;
     private final EventSubscriptionProcessor eventSubscriptionProcessor;
     private final DataSourceProperties dataSourceProperties;
@@ -31,6 +34,12 @@ public class PostgresChannelEventSubscriptionProcessor {
     private CountDownLatch latch = new CountDownLatch(0);
     private Future<?> future = CompletableFuture.completedFuture(null);
     private volatile PgConnection connection;
+
+    public PostgresChannelEventSubscriptionProcessor(List<AsyncEventHandler> eventHandlers, EventSubscriptionProcessor eventSubscriptionProcessor, DataSourceProperties dataSourceProperties) {
+        this.eventHandlers = eventHandlers;
+        this.eventSubscriptionProcessor = eventSubscriptionProcessor;
+        this.dataSourceProperties = dataSourceProperties;
+    }
 
     private static ExecutorService newExecutor() {
         CustomizableThreadFactory threadFactory =

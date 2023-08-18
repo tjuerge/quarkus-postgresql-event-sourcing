@@ -1,16 +1,15 @@
 package com.example.eventsourcing;
 
 import com.example.eventsourcing.config.KafkaTopicsConfig;
+import com.example.eventsourcing.domain.Aggregate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
 import org.springframework.boot.test.json.BasicJsonTester;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
@@ -24,10 +23,9 @@ import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RequiredArgsConstructor
-@Slf4j
 public class OrderTestScript {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(OrderTestScript.class);
     private static final HttpHeaders HEADERS = new HttpHeaders();
 
     static {
@@ -39,7 +37,12 @@ public class OrderTestScript {
     private final String kafkaBrokers;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final BasicJsonTester jsonTester = new BasicJsonTester(getClass());
-    
+
+    public OrderTestScript(TestRestTemplate restTemplate, String kafkaBrokers) {
+        this.restTemplate = restTemplate;
+        this.kafkaBrokers = kafkaBrokers;
+    }
+
     public void execute() throws JsonProcessingException {
         log.info("Place a new order");
         UUID orderId = placeOrder("""

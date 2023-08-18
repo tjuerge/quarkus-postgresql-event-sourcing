@@ -8,7 +8,6 @@ import com.example.eventsourcing.service.CommandProcessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +18,17 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
-@RequiredArgsConstructor
 public class OrdersController {
 
     private final ObjectMapper objectMapper;
     private final CommandProcessor commandProcessor;
     private final OrderProjectionRepository orderProjectionRepository;
+
+    public OrdersController(ObjectMapper objectMapper, CommandProcessor commandProcessor, OrderProjectionRepository orderProjectionRepository) {
+        this.objectMapper = objectMapper;
+        this.commandProcessor = commandProcessor;
+        this.orderProjectionRepository = orderProjectionRepository;
+    }
 
     @PostMapping
     public ResponseEntity<JsonNode> placeOrder(@RequestBody JsonNode request) throws IOException {
