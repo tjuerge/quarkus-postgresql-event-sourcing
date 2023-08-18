@@ -535,7 +535,7 @@ This reference implementation can be easily extended to comply with your domain 
 
 4. Build Java project and Docker image
     ```bash
-    ./gradlew clean build bootBuildImage -i
+    ./mvnw clean spring-boot:build-image
     ```
 
 5. Run PostgreSQL, Kafka and event-sourcing-app
@@ -551,7 +551,7 @@ This reference implementation can be easily extended to comply with your domain 
    
 7. Run E2E tests and see the output
     ```bash
-    E2E_TESTING=true ./gradlew clean test -i
+    E2E_TESTING=true ./mvnw clean test
     ```
 
 8. Explore the database using the Adminer database management tool at http://localhost:8181.
