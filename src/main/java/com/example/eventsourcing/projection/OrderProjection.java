@@ -8,6 +8,7 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,10 +29,10 @@ public class OrderProjection implements Persistable<UUID>, Serializable {
     @CollectionTable(name = "RM_ORDER_ROUTE", joinColumns = @JoinColumn(name = "ORDER_ID"))
     private List<WaypointProjection> route = new ArrayList<>();
     private UUID driverId;
-    private Instant placedDate;
-    private Instant acceptedDate;
-    private Instant completedDate;
-    private Instant cancelledDate;
+    private OffsetDateTime placedDate;
+    private OffsetDateTime acceptedDate;
+    private OffsetDateTime completedDate;
+    private OffsetDateTime cancelledDate;
 
     public OrderProjection() {
     }
@@ -90,19 +91,19 @@ public class OrderProjection implements Persistable<UUID>, Serializable {
         return this.driverId;
     }
 
-    public Instant getPlacedDate() {
+    public OffsetDateTime getPlacedDate() {
         return this.placedDate;
     }
 
-    public Instant getAcceptedDate() {
+    public OffsetDateTime getAcceptedDate() {
         return this.acceptedDate;
     }
 
-    public Instant getCompletedDate() {
+    public OffsetDateTime getCompletedDate() {
         return this.completedDate;
     }
 
-    public Instant getCancelledDate() {
+    public OffsetDateTime getCancelledDate() {
         return this.cancelledDate;
     }
 
@@ -134,19 +135,19 @@ public class OrderProjection implements Persistable<UUID>, Serializable {
         this.driverId = driverId;
     }
 
-    public void setPlacedDate(Instant placedDate) {
+    public void setPlacedDate(OffsetDateTime placedDate) {
         this.placedDate = placedDate;
     }
 
-    public void setAcceptedDate(Instant acceptedDate) {
+    public void setAcceptedDate(OffsetDateTime acceptedDate) {
         this.acceptedDate = acceptedDate;
     }
 
-    public void setCompletedDate(Instant completedDate) {
+    public void setCompletedDate(OffsetDateTime completedDate) {
         this.completedDate = completedDate;
     }
 
-    public void setCancelledDate(Instant cancelledDate) {
+    public void setCancelledDate(OffsetDateTime cancelledDate) {
         this.cancelledDate = cancelledDate;
     }
 

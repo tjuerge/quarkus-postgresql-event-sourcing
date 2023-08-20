@@ -1,13 +1,13 @@
 package com.example.eventsourcing.domain.event;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class Event {
 
     protected final UUID aggregateId;
     protected final int version;
-    protected final Instant createdDate = Instant.now();
+    protected final OffsetDateTime createdDate = OffsetDateTime.now();
     protected final EventType eventType = EventType.fromClass(this.getClass());
 
     protected Event(UUID aggregateId, int version) {
@@ -23,7 +23,7 @@ public class Event {
         return this.version;
     }
 
-    public Instant getCreatedDate() {
+    public OffsetDateTime getCreatedDate() {
         return this.createdDate;
     }
 

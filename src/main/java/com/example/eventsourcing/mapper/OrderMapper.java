@@ -7,7 +7,7 @@ import com.example.eventsourcing.dto.OrderDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Mapper(componentModel = "spring")
@@ -25,8 +25,4 @@ public interface OrderMapper {
     @Mapping(source = "order.route", target = "route")
     @Mapping(source = "order.driverId", target = "driverId")
     OrderDto toDto(Event event, OrderAggregate order);
-
-    default long toEpochMilli(Instant instant) {
-        return Optional.ofNullable(instant).map(Instant::toEpochMilli).orElse(0L);
-    }
 }

@@ -8,7 +8,7 @@ import com.example.eventsourcing.error.Error;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
@@ -20,10 +20,10 @@ public class OrderAggregate extends Aggregate {
     private BigDecimal price;
     private List<WaypointDto> route;
     private UUID driverId;
-    private Instant placedDate;
-    private Instant acceptedDate;
-    private Instant completedDate;
-    private Instant cancelledDate;
+    private OffsetDateTime placedDate;
+    private OffsetDateTime acceptedDate;
+    private OffsetDateTime completedDate;
+    private OffsetDateTime cancelledDate;
 
     @JsonCreator
     public OrderAggregate(UUID aggregateId, int version) {
@@ -139,19 +139,19 @@ public class OrderAggregate extends Aggregate {
         return this.driverId;
     }
 
-    public Instant getPlacedDate() {
+    public OffsetDateTime getPlacedDate() {
         return this.placedDate;
     }
 
-    public Instant getAcceptedDate() {
+    public OffsetDateTime getAcceptedDate() {
         return this.acceptedDate;
     }
 
-    public Instant getCompletedDate() {
+    public OffsetDateTime getCompletedDate() {
         return this.completedDate;
     }
 
-    public Instant getCancelledDate() {
+    public OffsetDateTime getCancelledDate() {
         return this.cancelledDate;
     }
 
